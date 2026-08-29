@@ -1,0 +1,37 @@
+name: Build SparkOS ISO
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Install Build Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-multilib nasm grub-pc-bin grub-common xorriso
+
+    - name: Compile SparkOS Kernel
+      run: |
+        make clean
+        make
+
+    - name: Create ISO Image
+      run: |
+        mkdir -p iso_root/boot
+        cp build/sparkos.bin iso_root/boot/sparkos.bin
+        grub-mkrescue -o SparkOS_v0.1.iso iso_root
+
+    - name: Upload ISO Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: SparkOS-ISO
+        path: SparkOS_v0.1.iso
+
