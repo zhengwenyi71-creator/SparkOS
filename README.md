@@ -42,3 +42,5 @@ SparkOS/
 ├── build_iso.sh           # 本地 ISO 打包腳本
 └── README.md
 
+
+(注意:這個操作系統大部分由AI製作)
